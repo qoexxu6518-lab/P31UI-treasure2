@@ -760,7 +760,7 @@ span.item-content{display:flex;align-items:center;justify-content:center;}
     <p class="doc-p">点击任意宝物后打开宝物操作弹窗。弹窗信息恢复为三条横向整排结构：基础属性、洗炼属性、器魂状态依次展示；底部统一放置操作按钮，默认显示「洗炼」，存在可注入器魂时追加「器魂注入」，已注入且可强化时追加「器魂强化」。若器魂无可操作项，则只保留居中的「洗炼」。</p>
 
     <div class="doc-h3"><span>6.5 获得入口</span><button class="doc-jump-btn" onclick="jumpTo('gain','gain')">↗ 查看</button></div>
-    <p class="doc-p">获得入口用于演示从奖励结算查看宝物/器魂的场景。点击宝物奖励直接弹出宝物弹窗，并沿用宝物弹窗的三条横向信息块与底部操作规则；点击器魂奖励会打开器魂详情弹窗，未注入器魂的「注入器魂」按钮会自动找到可注入宝物并打开注魂选择弹窗。</p>
+    <p class="doc-p">获得入口用于演示从奖励结算查看宝物/器魂的场景。该来源下详情弹窗只用于查看本次获得物，不提供洗炼、注魂、强化等操作按钮；新获得宝物只展示实际存在的基础属性，不显示未注魂、可注入、洗炼属性等空状态区块。</p>
 
     <div class="doc-h3"><span>6.6 注魂选择弹窗</span><button class="doc-jump-btn" onclick="jumpTo('treasure','engrave-select')">↗ 查看</button></div>
     <p class="doc-p">点击宝物操作弹窗底部的「器魂注入」后，不再进入全屏详情页，而是在当前宝物弹窗上方叠加「注入器魂」选择弹窗。旧弹窗保留在下层并模糊处理；点击任意闲置、已注入或未获得器魂时，继续在最上层打开器魂详情弹窗。</p>
@@ -1659,11 +1659,12 @@ function openEngraveDetail(uid,mode,viewQ,replaceTop){
   var currentSection='<div class="ks-section"><div class="ks-section-title">当前器魂属性</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,pe.quality,0))+preview+'</div></div>';
   var previewSection=q!==pe.quality?'<div class="ks-section"><div class="ks-section-title">'+ENGRAVE_QUALITY_NAMES[q]+'色属性预览</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,q,pe.quality))+'</div></div>':'';
   var btn='';
-  if(mode==='inject') btn='<button class="ks-btn cyan" onclick="injectEngraveFromDetail(\''+uid+'\')">注入器魂</button>';
+  if(mode==='gain') btn='';
+  else if(mode==='inject') btn='<button class="ks-btn cyan" onclick="injectEngraveFromDetail(\''+uid+'\')">注入器魂</button>';
   else if(owner&&canEnhanceTreasure(owner))btn='<button class="ks-btn cyan" onclick="openEngraveEnhancePopup(\''+owner.id+'\')">强化</button>';
   else if(mode==='warehouse'||mode==='view'){
     if(!owner)btn='<button class="ks-btn cyan" onclick="jumpToInjectForEngrave(\''+uid+'\')">注入器魂</button>';
-  }else if(mode==='gain'&&!owner)btn='<button class="ks-btn cyan" onclick="jumpToInjectForEngrave(\''+uid+'\')">注入器魂</button>';
+  }
   var action=btn?'<div class="ks-bottom-action">'+btn+'</div>':'';
   openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">器魂详情<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body">'+top+currentSection+previewSection+action+'</div></div>',{replaceTop:!!replaceTop});
 }
@@ -1770,9 +1771,12 @@ function openTreasureActionPopup(tid,source,slotType,replaceStack){
   var side=heroOps?'<div class="ks-treasure-side">'+heroOps+'</div>':'';
   var top='<div class="ks-treasure-top"><div class="ks-treasure-main">'+treasureIconHTML(t,72,true)+'<div class="ks-detail-info"><div class="ks-detail-name">'+getTreasureDisplayName(t)+'</div><div class="ks-detail-meta"><span class="ks-pill" style="color:'+QUALITY_COLORS[t.quality]+'">'+QUALITY_NAMES[t.quality]+'色品质</span><span class="ks-pill">'+TYPE_INFO[t.type].name+'</span></div><div class="ks-detail-meta">'+(t.equippedBy?'穿戴武将：'+t.equippedBy:'当前未穿戴')+'</div></div></div>'+side+'</div>';
   var baseSection='<div class="ks-section"><div class="ks-section-title">基础属性</div><div class="ks-attr-box">'+ksAttrRows(base)+'</div></div>';
-  var contentGrid='<div class="ks-treasure-grid">'+treasureWashPanelHTML(t)+treasureSoulPanelHTML(t,source)+'</div>';
+  var extraPanels='';
+  if(source!=='gain')extraPanels+=treasureWashPanelHTML(t);
+  if(source!=='gain' || getTreasureEngrave(t.id))extraPanels+=treasureSoulPanelHTML(t,source);
+  var contentGrid=extraPanels?'<div class="ks-treasure-grid">'+extraPanels+'</div>':'';
   var soulAction=treasureSoulAction(t,source);
-  var actions='<div class="ks-bottom-action '+(soulAction?'':'single')+'"><button class="ks-btn orange" onclick="openTreasureWashPopup(\''+t.id+'\')">洗炼</button>'+(soulAction?'<button class="ks-btn cyan" onclick="'+soulAction.onclick+'">'+soulAction.label+'</button>':'')+'</div>';
+  var actions=source==='gain'?'':'<div class="ks-bottom-action '+(soulAction?'':'single')+'"><button class="ks-btn orange" onclick="openTreasureWashPopup(\''+t.id+'\')">洗炼</button>'+(soulAction?'<button class="ks-btn cyan" onclick="'+soulAction.onclick+'">'+soulAction.label+'</button>':'')+'</div>';
   openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">宝物<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body">'+top+baseSection+contentGrid+actions+'</div></div>',{replace:!!replaceStack});
 }
 function washCostByLockCount(lockCount){var costs=[9,18,36,72,108];return costs[Math.max(0,Math.min(costs.length-1,lockCount))];}
