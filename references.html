@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参考游戏截图 — 宝物系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#ffffff;color:#2c2c2c;font-family:'Microsoft YaHei','PingFang SC',sans-serif;padding:0 0 40px;}
+h1{text-align:center;color:#f0e6c8;font-size:22px;margin-bottom:6px;}
+.subtitle{text-align:center;color:rgba(240,230,200,0.7);font-size:13px;margin-bottom:0;}
+.page-header{background:#16161e;padding:28px 24px 24px;margin-bottom:32px;}
+.back-link{display:inline-block;margin-bottom:20px;color:#c8a84e;text-decoration:none;font-size:14px;padding:6px 16px;border:1px solid rgba(200,168,78,0.3);border-radius:8px;}
+.back-link:hover{background:rgba(200,168,78,0.1);}
+.page-content{padding:0 24px;}
+.section{margin-bottom:40px;}
+.section-title{font-size:16px;color:#2c1e08;font-weight:bold;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #c8a84e;}
+.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+.image-card{background:#f5f3ee;border:1px solid #e0d8c8;border-radius:12px;overflow:hidden;transition:transform .2s;}
+.image-card:hover{transform:translateY(-2px);}
+.image-card img{width:100%;display:block;cursor:pointer;}
+.image-card .caption{padding:10px 14px;font-size:13px;color:#666;}
+/* Lightbox */
+.lightbox{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;cursor:pointer;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;cursor:default;user-select:none;}
+.lightbox-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.lightbox-close:hover{background:rgba(255,255,255,0.3);}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+<a class="back-link" href="index.html">← 返回交互文档</a>
+<h1>参考游戏截图</h1>
+<p class="subtitle">以下为参考游戏的相关系统截图，用于设计参考</p>
+</div>
+<div class="page-content">
+
+<div class="section">
+  <div class="section-title">本项目 — 武将宝物与仓库界面</div>
+  <div class="image-grid">
+    <div class="image-card">
+      <img src="references/本项目/本项目-武将-宝物界面.png" onclick="openLB(this.src)">
+      <div class="caption">武将-宝物界面：用于英雄宝物入口与热区点击演示</div>
+    </div>
+    <div class="image-card">
+      <img src="references/本项目/本项目-仓库界面.png" onclick="openLB(this.src)">
+      <div class="caption">仓库界面：用于宝物/器魂仓库分页参考</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">KING SHOT — 弹窗与品质分页</div>
+  <div class="image-grid">
+    <div class="image-card">
+      <img src="references/KING SHOT/VIP等级.jpg" onclick="openLB(this.src)">
+      <div class="caption">VIP等级：品质分页、当前标注和 New 标识参考</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KING SHOT/装备详情.jpg" onclick="openLB(this.src)">
+      <div class="caption">装备详情弹窗</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KING SHOT/穿戴列表.jpg" onclick="openLB(this.src)">
+      <div class="caption">穿戴列表弹窗</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KING SHOT/替换确认.jpg" onclick="openLB(this.src)">
+      <div class="caption">替换确认弹窗</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">KingShot — 宠物系统</div>
+  <div class="image-grid">
+    <div class="image-card">
+      <img src="references/KingShot/Kingshot-宠物-升级.jpg" onclick="openLB(this.src)">
+      <div class="caption">宠物升级界面</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KingShot/Kingshot-宠物-突破.jpg" onclick="openLB(this.src)">
+      <div class="caption">宠物突破界面</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KingShot/Kingshot-宠物-洗炼.jpg" onclick="openLB(this.src)">
+      <div class="caption">宠物洗炼界面</div>
+    </div>
+    <div class="image-card">
+      <img src="references/KingShot/Kingshot-宠物-洗炼替换.jpg" onclick="openLB(this.src)">
+      <div class="caption">宠物洗炼替换确认</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">原神 — 圣遗物系统</div>
+  <div class="image-grid">
+    <div class="image-card">
+      <img src="references/原神/原神-圣遗物-强化.jpg" onclick="openLB(this.src)">
+      <div class="caption">圣遗物强化界面</div>
+    </div>
+    <div class="image-card">
+      <img src="references/原神/原神-圣遗物-重塑.jpg" onclick="openLB(this.src)">
+      <div class="caption">圣遗物重塑界面</div>
+    </div>
+    <div class="image-card">
+      <img src="references/原神/原神-圣遗物-重塑替换.jpg" onclick="openLB(this.src)">
+      <div class="caption">圣遗物重塑替换确认</div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+</div><!-- /page-content -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLB()">✕</button>
+  <img id="lb-img" src="references/本项目/本项目-武将-宝物界面.png">
+</div>
+
+<script>
+var lbScale=1,lbDrag=false,lbSX,lbSY,lbTX=0,lbTY=0;
+function openLB(s){
+  var lb=document.getElementById('lightbox'),img=document.getElementById('lb-img');
+  img.src=s;lbScale=1;lbTX=0;lbTY=0;img.style.transform='';
+  lb.classList.add('show');document.body.style.overflow='hidden';
+}
+function closeLB(){
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow='';
+}
+(function(){
+  var lb=document.getElementById('lightbox'),img=document.getElementById('lb-img');
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLB();});
+  lb.addEventListener('wheel',function(e){
+    e.preventDefault();
+    lbScale=Math.max(0.2,Math.min(10,lbScale*(e.deltaY>0?0.9:1.1)));
+    img.style.transform='scale('+lbScale+') translate('+(lbTX/lbScale)+'px,'+(lbTY/lbScale)+'px)';
+  },{passive:false});
+  img.addEventListener('mousedown',function(e){
+    e.preventDefault();lbDrag=true;lbSX=e.clientX-lbTX;lbSY=e.clientY-lbTY;img.style.cursor='grabbing';
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!lbDrag)return;lbTX=e.clientX-lbSX;lbTY=e.clientY-lbSY;
+    img.style.transform='scale('+lbScale+') translate('+(lbTX/lbScale)+'px,'+(lbTY/lbScale)+'px)';
+  });
+  document.addEventListener('mouseup',function(){if(lbDrag){lbDrag=false;img.style.cursor='default';}});
+})();
+</script>
+</body>
+</html>
