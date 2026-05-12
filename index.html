@@ -69,6 +69,11 @@ body{background:#ffffff;color:var(--text-primary);font-family:'Microsoft YaHei',
 .doc-qa{background:#fff;border:1px solid #e0d8c0;border-radius:4px;padding:10px 14px;margin:8px 0;font-size:12.5px;}
 .doc-qa-q{color:#8a5c10;font-weight:bold;margin-bottom:4px;}
 .doc-qa-a{color:#444;line-height:1.7;}
+.doc-motion-card{background:#fff;border:1px solid #e0d8c0;border-radius:8px;padding:10px 12px;margin:10px 0;}
+.doc-motion-title{font-size:12.5px;font-weight:bold;color:#8a5c10;margin-bottom:4px;}
+.doc-play-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:3px 10px;border:1px solid rgba(200,168,78,0.58);border-radius:12px;background:linear-gradient(180deg,#fff8df,#ead292);color:#6b4208;font-size:10px;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,0.08);white-space:nowrap;margin-left:10px;}
+.doc-play-btn:hover{filter:brightness(1.04);border-color:#b78728;}
+.doc-state-list{margin:6px 0 0;padding-left:18px;color:#333;font-size:12.5px;line-height:1.75;}
 
 /* ========== Game Container ========== */
 .game-col{display:flex;flex-direction:column;gap:10px;order:0;align-self:flex-start;flex-shrink:0;position:sticky;top:20px;}
@@ -291,7 +296,8 @@ span.item-content{display:flex;align-items:center;justify-content:center;}
 .ks-modal-body::-webkit-scrollbar{display:none;}
 #integrated-popup-root{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none;}
 .popup-stack-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:filter .18s,transform .18s,opacity .18s;pointer-events:none;}
-.popup-stack-layer>.ks-modal-card{pointer-events:auto;}
+@keyframes ksModalPop{0%{opacity:0;transform:translateY(10px) scale(.94);}100%{opacity:1;transform:translateY(0) scale(1);}}
+.popup-stack-layer>.ks-modal-card{pointer-events:auto;animation:ksModalPop .22s cubic-bezier(.22,1,.36,1) both;}
 .popup-stack-layer.blurred{filter:blur(3px) brightness(.72);transform:scale(.985);opacity:.82;}
 .popup-stack-layer.blurred>.ks-modal-card{pointer-events:none;}
 .engrave-select-modal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;background:#ded3bf;border-radius:16px;padding:10px;max-height:390px;overflow-y:auto;}
@@ -375,6 +381,10 @@ span.item-content{display:flex;align-items:center;justify-content:center;}
 .ks-attr-row .attr-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ks-attr-row .attr-value{font-weight:bold;color:#5d463d;text-align:right;white-space:nowrap;}
 .ks-attr-row.up-attr .attr-value{color:#18a757;}
+.ks-engrave-attr-row{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;line-height:1.45;color:#806f63;padding:5px 0;}
+.ks-engrave-attr-row .attr-line{flex:1;min-width:0;white-space:normal;overflow:visible;text-overflow:clip;}
+.ks-engrave-attr-row .attr-value-inline{font-weight:bold;color:#5d463d;}
+.ks-engrave-attr-row.up-attr .attr-value-inline{color:#18a757;}
 .ks-new-tag{display:inline-flex;align-items:center;justify-content:center;margin-left:4px;padding:0 5px;height:16px;border-radius:8px;background:#ff5f40;color:#fff;font-size:9px;font-weight:bold;line-height:16px;box-shadow:0 1px 2px rgba(0,0,0,0.18);}
 .ks-quality-tabs{display:flex;gap:5px;margin:2px 0 8px;}
 .ks-quality-tab{position:relative;flex:1;height:28px;border:1px solid rgba(125,100,67,0.25);border-radius:9px;background:rgba(255,255,255,0.42);color:#776552;font-size:11px;font-weight:bold;cursor:pointer;font-family:inherit;}
@@ -776,6 +786,60 @@ span.item-content{display:flex;align-items:center;justify-content:center;}
 
     <div class="doc-h3"><span>6.10 替换确认</span><button class="doc-jump-btn" onclick="jumpTo('hero-entry','hero-entry')">↗ 查看</button></div>
     <p class="doc-p">替换确认按整组对比展示旧宝物与新宝物：基础属性、器魂、洗炼属性分别独立成组；顶部只保留宝物图标对比，名称由图标内展示，不再在图标下方重复显示。点击器魂图标可继续查看器魂详情。</p>
+
+    <div class="doc-divider"></div>
+
+    <!-- ===== 七、动效需求 ===== -->
+    <a class="doc-anchor" id="doc-motion"></a>
+    <div class="doc-h2"><span><span class="doc-section-num">七</span>动效需求</span></div>
+    <p class="doc-p">本节为动效制作的独立说明，范围只包含当前项目需要制作的动效：<span class="doc-hl">通用弹窗入场</span>、<span class="doc-hl">弹窗栈层级变化</span>、<span class="doc-hl">器魂强化失败浮动提示</span>。每个动效下方都有播放按钮，点击后只切换左侧演示界面，右侧文档位置保持不变；每次点击都会重新播放一次。</p>
+
+    <div class="doc-h3"><span>7.1 通用弹窗入场</span><button class="doc-play-btn" onclick="playMotionDemo('popup-basic')">▶ 播放动效</button></div>
+    <div class="doc-motion-card">
+      <div class="doc-motion-title">触发场景</div>
+      <p class="doc-p">打开宝物详情、器魂详情、洗炼、注魂、强化、替换确认、奖励详情等普通弹窗时使用。</p>
+      <div class="doc-motion-title">状态要求</div>
+      <ul class="doc-state-list">
+        <li><span class="doc-hl">打开前</span>：左侧界面保持原状态，无弹窗层。</li>
+        <li><span class="doc-hl">入场中</span>：出现半透明遮罩；弹窗从中心轻微缩放并淡入，建议 180ms～260ms。</li>
+        <li><span class="doc-hl">打开后</span>：弹窗居中，内容可读，只有弹窗本体可操作。</li>
+        <li><span class="doc-hl">关闭时</span>：立即响应关闭，不需要长退场动画。</li>
+      </ul>
+    </div>
+
+    <div class="doc-h3"><span>7.2 弹窗栈层级变化</span><button class="doc-play-btn" onclick="playMotionDemo('popup-stack')">▶ 播放动效</button></div>
+    <div class="doc-motion-card">
+      <div class="doc-motion-title">触发场景</div>
+      <p class="doc-p">在一个弹窗上继续打开第二个弹窗时使用，例如宝物详情上打开注入器魂弹窗、器魂详情切换到所属宝物、替换流程中的二次确认。</p>
+      <div class="doc-motion-title">状态要求</div>
+      <ul class="doc-state-list">
+        <li><span class="doc-hl">第一层弹窗</span>：作为下层保留在原位置，不关闭。</li>
+        <li><span class="doc-hl">第二层弹窗打开时</span>：下层弹窗轻微模糊、缩小或降低亮度，层级变化建议约 180ms。</li>
+        <li><span class="doc-hl">顶层弹窗</span>：保持清晰，并接管所有点击操作。</li>
+        <li><span class="doc-hl">返回下层</span>：关闭顶层后，下层恢复清晰和可点击状态。</li>
+      </ul>
+    </div>
+
+    <div class="doc-h3"><span>7.3 器魂强化失败浮动提示</span><button class="doc-play-btn" onclick="playMotionDemo('enhance-fail')">▶ 播放动效</button></div>
+    <div class="doc-motion-card">
+      <div class="doc-motion-title">触发场景</div>
+      <p class="doc-p">玩家点击器魂强化按钮且本次判定失败时使用。失败时不关闭强化弹窗，也不弹出结果弹窗。</p>
+      <div class="doc-motion-title">显示内容</div>
+      <ul class="doc-state-list">
+        <li>第一行：强化失败。</li>
+        <li>第二行：成功率变化，例如“成功率 70% → 80%”。</li>
+        <li>提示出现后，弹窗上的本次成功率需要刷新到失败后的新成功率。</li>
+      </ul>
+      <div class="doc-motion-title">动画状态</div>
+      <table class="doc-table">
+        <tr><th>阶段</th><th>表现</th></tr>
+        <tr><td>0%</td><td>提示透明，位置略向下，缩放约 0.96。</td></tr>
+        <tr><td>14%</td><td>提示完全显示，回到正常位置。</td></tr>
+        <tr><td>72%</td><td>提示保持显示，并轻微上浮。</td></tr>
+        <tr><td>100%</td><td>提示继续上浮并淡出，缩放约 0.98。</td></tr>
+      </table>
+      <p class="doc-p">整体持续时间控制在 <span class="doc-hl">1～2 秒</span>，当前建议为 1600ms～1700ms。</p>
+    </div>
 
     <div style="height:40px;"></div>
   </div><!-- end .doc-body -->
@@ -1621,15 +1685,28 @@ function engravingIconHTML(eData,quality,size){
 }
 function engraveAttrsAtQuality(eData,quality,currentQ){
   var attrs=[];
-  (eData.effects||[]).forEach(function(eff){
+  var setName=engraveSetDisplayName(eData);
+  (eData.effects||[]).forEach(function(eff,idx){
     var val=eff.values[quality-1];
     if(!val)return;
     var old=currentQ?eff.values[currentQ-1]:0;
-    attrs.push({name:eff.name,value:val,suffix:eff.suffix||'',isNew:currentQ&&(!old||old<=0)&&quality>currentQ,isUp:currentQ&&quality>currentQ&&val>old});
+    attrs.push({name:eff.name,value:val,suffix:eff.suffix||'',setName:setName,requiredCount:idx+1,isNew:currentQ&&(!old||old<=0)&&quality>currentQ,isUp:currentQ&&quality>currentQ&&val>old});
   });
   return attrs.slice(0,quality);
 }
 function fmtEngAttr(a){return '+'+a.value+(a.suffix||'');}
+function engraveSetDisplayName(eData){
+  var name=(eData&&eData.set)||((eData&&eData.name)||'').split('·')[0]||'同名';
+  return name.replace(/套$/,'');
+}
+function engraveAttrRows(attrs){
+  if(!attrs||!attrs.length)return '<div class="ks-empty-box">无属性</div>';
+  return attrs.map(function(a){
+    var value=fmtEngAttr(a);
+    var line='武将身上有'+(a.requiredCount||1)+'个【'+(a.setName||'同名')+'】器魂时，'+a.name+'<span class="attr-value-inline">'+value+'</span>'+(a.isNew?'<span class="ks-new-tag">New</span>':'');
+    return '<div class="ks-engrave-attr-row '+(a.isUp?'up-attr':'')+'"><span style="width:18px;text-align:center;opacity:.72;flex-shrink:0;">'+attrIconByName(a.name)+'</span><span class="attr-line">'+line+'</span></div>';
+  }).join('');
+}
 function attrTextToRow(text){
   var raw=String(text||''),m=raw.match(/^(.*?)([+-]\d+(?:\.\d+)?%?)$/)||raw.match(/^(.*?)(\d+(?:\.\d+)?%)$/)||raw.match(/^(.*?)(\d+)$/);
   if(m&&m[1]){var val=m[2];if(val.charAt(0)!=='+'&&val.charAt(0)!=='-')val='+'+val;return {name:m[1],valueText:val};}
@@ -1656,8 +1733,8 @@ function openEngraveDetail(uid,mode,viewQ,replaceTop){
     for(var pq=pe.quality+1;pq<=5;pq++)preview+='<button class="ks-preview-chip '+(pq===q&&q>pe.quality?'active':'')+'" onclick="openEngraveDetail(\''+uid+'\',\''+(mode||'warehouse')+'\','+pq+',true)">'+ENGRAVE_QUALITY_NAMES[pq]+'</button>';
     preview+='</div>';
   }
-  var currentSection='<div class="ks-section"><div class="ks-section-title">当前器魂属性</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,pe.quality,0))+preview+'</div></div>';
-  var previewSection=q!==pe.quality?'<div class="ks-section"><div class="ks-section-title">'+ENGRAVE_QUALITY_NAMES[q]+'色属性预览</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,q,pe.quality))+'</div></div>':'';
+  var currentSection='<div class="ks-section"><div class="ks-section-title">当前器魂属性</div><div class="ks-attr-box">'+engraveAttrRows(engraveAttrsAtQuality(eData,pe.quality,0))+preview+'</div></div>';
+  var previewSection=q!==pe.quality?'<div class="ks-section"><div class="ks-section-title">'+ENGRAVE_QUALITY_NAMES[q]+'色属性预览</div><div class="ks-attr-box">'+engraveAttrRows(engraveAttrsAtQuality(eData,q,pe.quality))+'</div></div>':'';
   var btn='';
   if(mode==='gain') btn='';
   else if(mode==='inject') btn='<button class="ks-btn cyan" onclick="injectEngraveFromDetail(\''+uid+'\')">注入器魂</button>';
@@ -1675,7 +1752,7 @@ function openOwnerTreasureFromEngrave(tid){
 function openEngravePoolDetail(type,poolId,weaponQ){
   var eData=(ENGRAVE_POOL[type]||[]).find(function(e){return e.id===poolId;});if(!eData)return;
   var q=Math.max(1,Math.min(5,weaponQ||1));
-  openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">器魂详情<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body"><div class="ks-detail-top">'+engravingIconHTML(eData,q,72)+'<div class="ks-detail-info"><div class="ks-detail-name">'+eData.name+'</div><div class="ks-detail-meta"><span class="ks-pill" style="color:'+QUALITY_COLORS[q]+'">未获得预览</span><span class="ks-pill">'+TYPE_INFO[type].name+'</span></div></div></div><div class="ks-section"><div class="ks-section-title">器魂属性</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,q,0))+'</div></div></div></div>');
+  openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">器魂详情<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body"><div class="ks-detail-top">'+engravingIconHTML(eData,q,72)+'<div class="ks-detail-info"><div class="ks-detail-name">'+eData.name+'</div><div class="ks-detail-meta"><span class="ks-pill" style="color:'+QUALITY_COLORS[q]+'">未获得预览</span><span class="ks-pill">'+TYPE_INFO[type].name+'</span></div></div></div><div class="ks-section"><div class="ks-section-title">器魂属性</div><div class="ks-attr-box">'+engraveAttrRows(engraveAttrsAtQuality(eData,q,0))+'</div></div></div></div>');
 }
 function injectEngraveFromDetail(uid){
   if(!_pendingEngraveSelect){showToast('请先选择要注入的宝物');return;}
@@ -1923,7 +2000,7 @@ function openEngraveEnhancePopup(treasureId,replaceTop){
   var rateHtml=enhanceRateCardHTML(cfg,failCount,nextColor,nextQ);
   var costHtml='<div style="display:flex;justify-content:center;gap:12px;padding:6px 0;">'+costItemBig('res/item_1.png',TYPE_INFO[t.type].material,cfg.baseCost,nextQ)+costItemBig('res/item_2.png',TYPE_INFO[t.type].essence,cfg.chipCost,nextQ)+costItemBig('💰','银两',formatNum(cfg.silverCost),2)+(cfg.goldCost>0?costItemBig('🪙','元宝',formatNum(cfg.goldCost),4):'')+'</div>';
   var top='<div class="ks-enhance-head"><div class="ks-enhance-side">'+engravingIconHTML(eData,curQ,62)+'<div class="ks-enhance-name">'+eData.name+'</div><div class="ks-enhance-q" style="color:'+QUALITY_COLORS[curQ]+'">'+ENGRAVE_QUALITY_NAMES[curQ]+'色</div></div><div class="ks-enhance-arrow">➜</div><div class="ks-enhance-side">'+engravingIconHTML(eData,nextQ,62)+'<div class="ks-enhance-name">'+eData.name+'</div><div class="ks-enhance-q" style="color:'+nextColor+'">'+ENGRAVE_QUALITY_NAMES[nextQ]+'色</div></div></div>';
-  openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">器魂强化<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body">'+top+'<div class="ks-section"><div class="ks-section-title">强化后属性</div><div class="ks-attr-box">'+ksAttrRows(engraveAttrsAtQuality(eData,nextQ,curQ))+'</div></div><div class="ks-section"><div class="ks-section-title">消耗</div><div class="ks-attr-box">'+costHtml+'</div></div><div class="ks-section"><div class="ks-section-title">强化判定</div>'+rateHtml+'</div><div class="ks-bottom-action"><button class="ks-btn cyan" onclick="doEngraveEnhanceFromPopup(\''+treasureId+'\')">强化</button></div></div></div>',{replaceTop:!!replaceTop});
+  openIntegratedPopup('<div class="ks-modal-card"><div class="ks-modal-title">器魂强化<button class="ks-modal-close" onclick="closeIntegratedPopup()">×</button></div><div class="ks-modal-body">'+top+'<div class="ks-section"><div class="ks-section-title">强化后属性</div><div class="ks-attr-box">'+engraveAttrRows(engraveAttrsAtQuality(eData,nextQ,curQ))+'</div></div><div class="ks-section"><div class="ks-section-title">消耗</div><div class="ks-attr-box">'+costHtml+'</div></div><div class="ks-section"><div class="ks-section-title">强化判定</div>'+rateHtml+'</div><div class="ks-bottom-action"><button class="ks-btn cyan" onclick="doEngraveEnhanceFromPopup(\''+treasureId+'\')">强化</button></div></div></div>',{replaceTop:!!replaceTop});
 }
 function doEngraveEnhanceFromPopup(tid){
   var t=findTreasure(tid),eng=t?getTreasureEngrave(tid):null;if(!eng||!t)return;
@@ -2056,6 +2133,59 @@ function jumpTo(screen, target){
       }
     }
   },50);
+}
+
+function motionPickTreasureForPopup(){
+  return getOwnedTreasures('all')[0]||null;
+}
+function motionPickTreasureForStack(){
+  return getOwnedTreasures('all').find(function(tr){return canInjectTreasure(tr);})||motionPickTreasureForPopup();
+}
+function motionPickTreasureForFail(){
+  return getOwnedTreasures('all').find(function(tr){
+    var eng=getTreasureEngrave(tr.id),cfg=eng&&ENGRAVE_UPGRADE_CFG[eng.quality+1];
+    return canEnhanceTreasure(tr)&&cfg&&cfg.baseRate<100;
+  })||getOwnedTreasures('all').find(function(tr){return canEnhanceTreasure(tr);});
+}
+function playMotionDemo(kind){
+  closeAllOverlays();
+  if(kind==='popup-basic'){
+    demoGo('treasure');highlightNavBtn('warehouse-treasure');
+    setTimeout(function(){
+      switchWarehouseTab('treasure');
+      var t=motionPickTreasureForPopup();if(!t)return;
+      selectCarouselTreasure(t.id,true);
+      openTreasureActionPopup(t.id,'warehouse',null,true);
+    },80);
+  }
+  else if(kind==='popup-stack'){
+    demoGo('treasure');highlightNavBtn('engrave-select');
+    setTimeout(function(){
+      switchWarehouseTab('treasure');
+      var t=motionPickTreasureForStack();if(!t)return;
+      selectCarouselTreasure(t.id,true);
+      openTreasureActionPopup(t.id,'warehouse',null,true);
+      setTimeout(function(){openEngraveSelect(t.id);},280);
+    },80);
+  }
+  else if(kind==='enhance-fail'){
+    demoGo('treasure');highlightNavBtn('engrave-upgrade');
+    setTimeout(function(){
+      switchWarehouseTab('treasure');
+      var t=motionPickTreasureForFail();if(!t)return;
+      selectCarouselTreasure(t.id,true);
+      openEngraveEnhancePopup(t.id);
+      setTimeout(function(){
+        var eng=getTreasureEngrave(t.id),cfg=eng&&ENGRAVE_UPGRADE_CFG[eng.quality+1];
+        var oldRate=cfg?Math.min(cfg.baseRate+(eng.failCount||0)*(cfg.failRateAdd||0),100):70;
+        var newRate=cfg?Math.min(oldRate+(cfg.failRateAdd||10),100):80;
+        var layer=document.querySelector('#integrated-popup-root .popup-stack-layer:last-child');
+        var val=layer?layer.querySelector('.ks-rate-value'):null;
+        if(val){val.textContent=newRate+'%';val.style.color=newRate>=100?'#18a757':val.style.color;}
+        showEnhanceFailFloat(oldRate,newRate);
+      },360);
+    },80);
+  }
 }
 
 /* ========== Sub Tab (Bottom) ========== */
@@ -2480,7 +2610,7 @@ function showEngraveResult(tid,mode){
   iconHtml+='</div>';
   var attrRows='';
   if(eData){
-    attrRows=ksAttrRows(engraveAttrsAtQuality(eData,nq,0));
+    attrRows=engraveAttrRows(engraveAttrsAtQuality(eData,nq,0));
   }
   _lastUpgradeTid=(mode==='upgrade')?tid:null;
   openIntegratedPopup('<div class="ks-modal-card" style="width:320px;"><div class="ks-modal-title">'+resultTitle+'<button class="ks-modal-close" onclick="closeEngraveResult()">×</button></div><div class="ks-modal-body"><div class="ks-detail-top" style="margin-bottom:8px;">'+iconHtml+'<div class="ks-detail-info"><div class="ks-detail-name">'+(eData?eData.name:'器魂')+'</div><div class="ks-detail-meta"><span class="ks-pill" style="color:'+nqColor+'">'+ENGRAVE_QUALITY_NAMES[nq]+'色器魂</span></div></div></div><div class="ks-section"><div class="ks-section-title">生效属性</div><div class="ks-attr-box ks-result-attrs">'+attrRows+'</div></div><div class="ks-bottom-action"><button class="ks-btn cyan" onclick="closeEngraveResult()">确认</button></div></div></div>');
